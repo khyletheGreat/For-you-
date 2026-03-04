@@ -399,7 +399,24 @@
       { transform: 'translateY(0)' }
     ], { duration: 1200, easing: 'ease-in-out' });
   }, 600);
-
+  function onYouTubeIframeAPIReady(){
+    player = new YT.Player('player', {
+      height: '0',
+      width: '0',
+      videoId: 'HJstyRBLqBQ', // NEW song from She & Him :contentReference[oaicite:1]{index=1}
+      playerVars: {
+        'playsinline':1,
+        'autoplay':0,
+        'controls':0,
+        'rel':0,
+        'modestbranding':1
+      },
+      events: {
+        'onReady': (e) => { /* ready */ }
+      }
+    });
+  }
 </script>
 </body>
 </html>
+
