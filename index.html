@@ -1,10 +1,368 @@
-<!DOCTYPE html>
-<html>
+<!-- save as index.html -->
+<!doctype html>
+<html lang="en">
 <head>
-    <title>This My First Website Bitch</title>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Digital Love Letter</title>
+<style>
+  :root{
+    --bg1: #0f172a;
+    --bg2: #07203b;
+    --accent: #ff6b81;
+    --paper: #fff7f9;
+    --envelope: #ffe6ec;
+    --shadow: rgba(2,6,23,0.6);
+    font-family: "Poppins", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  }
+  html,body{height:100%;margin:0}
+  body{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background: radial-gradient(1200px 600px at 10% 10%, rgba(255,107,129,0.06), transparent),
+                linear-gradient(180deg,var(--bg1),var(--bg2));
+    color:#fff;
+    overflow:hidden;
+  }
+
+  .stage{
+    width:360px;
+    max-width:92vw;
+    perspective:1200px;
+    text-align:center;
+    position:relative;
+    padding:24px;
+  }
+
+  /* envelope */
+  .envelope{
+    width:100%;
+    height:240px;
+    position:relative;
+    margin:0 auto;
+    transform-style:preserve-3d;
+    transition: transform 600ms cubic-bezier(.2,.9,.2,1);
+  }
+
+  .envelope .body{
+    position:absolute;
+    inset:0;
+    border-radius:12px;
+    background: linear-gradient(180deg,var(--envelope),#ffd8e6);
+    box-shadow: 0 18px 40px var(--shadow), 0 6px 10px rgba(0,0,0,0.25) inset;
+    overflow:hidden;
+    display:flex;
+    align-items:flex-end;
+    justify-content:center;
+    padding-bottom:22px;
+  }
+
+  .envelope .flap{
+    position:absolute;
+    left:50%;
+    top:0;
+    transform-origin:50% 0%;
+    width:120%;
+    height:60%;
+    translate: -50% -18%;
+    background: linear-gradient(180deg,#ffb6cc,#ffdbe6);
+    clip-path: polygon(50% 0, 100% 45%, 100% 100%, 0 100%, 0 45%);
+    border-radius:8px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+    transition: transform 700ms cubic-bezier(.2,.9,.2,1);
+  }
+
+  /* letter inside */
+  .letter{
+    width:86%;
+    max-width:300px;
+    height:86%;
+    background:var(--paper);
+    border-radius:8px;
+    transform: translateY(60%);
+    transition: transform 700ms cubic-bezier(.2,.9,.2,1);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+    padding:20px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:10px;
+  }
+
+  .letter .title{
+    font-weight:700;
+    color:#222;
+    letter-spacing:0.4px;
+  }
+  .letter .message{
+    color:#222;
+    font-size:15px;
+    line-height:1.45;
+    text-align:center;
+    min-height:72px;
+    white-space:pre-wrap;
+    font-family: "Georgia", serif;
+  }
+
+  .envelope.open .flap{
+    transform: translate(-50%,-18%) rotateX(180deg);
+  }
+  .envelope.open .letter{
+    transform: translateY(-6%);
+  }
+
+  /* floating hearts */
+  .hearts{
+    position:absolute;
+    inset:0;
+    pointer-events:none;
+    overflow:visible;
+  }
+  .heart{
+    position:absolute;
+    bottom:20px;
+    width:18px;
+    height:18px;
+    transform-origin:center;
+    opacity:0;
+    animation: floatUp linear infinite;
+  }
+  .heart:before, .heart:after{
+    content:"";
+    position:absolute;
+    width:100%;
+    height:100%;
+    border-radius:50%;
+    background:var(--accent);
+    top:0;
+    left:0;
+  }
+  .heart:before{
+    transform: translateX(-50%);
+    left:50%;
+  }
+  .heart:after{
+    transform: translateY(-50%);
+    top:50%;
+  }
+
+  @keyframes floatUp{
+    0%{ transform: translateY(0) scale(0.6) rotate(0deg); opacity:0; }
+    8%{ opacity:1; transform: translateY(-10px) scale(0.9) rotate(10deg); }
+    50%{ transform: translateY(-160px) scale(1) rotate(20deg); opacity:0.9; }
+    100%{ transform: translateY(-320px) scale(0.8) rotate(40deg); opacity:0; }
+  }
+
+  /* controls */
+  .controls{
+    margin-top:14px;
+    display:flex;
+    gap:8px;
+    justify-content:center;
+  }
+  button{
+    background:transparent;
+    border:1px solid rgba(255,255,255,0.12);
+    color:#fff;
+    padding:8px 12px;
+    border-radius:12px;
+    cursor:pointer;
+    backdrop-filter: blur(6px);
+  }
+  button:active{ transform: translateY(1px) }
+  .small-hint{
+    margin-top:10px;
+    color:rgba(255,255,255,0.65);
+    font-size:13px;
+  }
+
+  .photo{
+    width:84px;
+    height:84px;
+    object-fit:cover;
+    border-radius:8px;
+    border:4px solid #fff;
+    box-shadow:0 6px 18px rgba(0,0,0,0.18);
+  }
+
+  /* responsive */
+  @media (max-width:420px){
+    .stage{ padding:12px }
+    .envelope{ height:200px }
+  }
+</style>
 </head>
 <body>
-    <h1>Welcome to My Website calla You Nigger</h1>
-    <p>Calla David,I made this using GitHub Pages Motehr Fucker!!!</p>
+  <div class="stage" role="main" aria-label="digital love letter">
+    <div class="envelope" id="envelope" title="Click to open">
+      <div class="flap" aria-hidden="true"></div>
+      <div class="body">
+        <div class="letter" id="letter" aria-live="polite">
+          <div class="title">For You</div>
+          <div class="message" id="message" data-text="Hey — you mean the world to me. I wrote this just for you. Open your heart and take this little digital hug. ❤️
+— From me.">
+            <!-- message will be typed by JS -->
+          </div>
+          <!-- optional photo -->
+          <!-- replace 'photo.jpg' with your image or remove this block -->
+          <img class="photo" id="photo" src="" alt="" style="display:none"/>
+        </div>
+      </div>
+    </div>
+
+    <div class="controls">
+      <button id="openBtn">Open</button>
+      <button id="replayBtn">Replay</button>
+      <button id="musicBtn">Play Music</button>
+    </div>
+    <div class="small-hint">Click the envelope or "Open" to reveal the letter • Click "Replay" to type again</div>
+
+    <!-- hearts container -->
+    <div class="hearts" id="hearts"></div>
+
+    <!-- optional audio (replace music.mp3 with your file if you want) -->
+    <audio id="bgMusic" loop>
+      <source src="music.mp3" type="audio/mpeg">
+      <!-- fallback: no audio -->
+    </audio>
+  </div>
+
+<script>
+  // Elements
+  const envelope = document.getElementById('envelope');
+  const openBtn = document.getElementById('openBtn');
+  const replayBtn = document.getElementById('replayBtn');
+  const musicBtn = document.getElementById('musicBtn');
+  const messageEl = document.getElementById('message');
+  const hearts = document.getElementById('hearts');
+  const bg = document.getElementById('bgMusic');
+
+  let typingTimeouts = [];
+  let opened = false;
+
+  // typing function (simple)
+  function typeText(text, el, speed=35){
+    // clear previous
+    typingTimeouts.forEach(t => clearTimeout(t));
+    el.textContent = "";
+    for (let i=0;i<text.length;i++){
+      const t = setTimeout(()=> {
+        el.textContent += text[i];
+      }, i*speed);
+      typingTimeouts.push(t);
+    }
+  }
+
+  function openEnvelope(){
+    if (opened) return;
+    envelope.classList.add('open');
+    opened = true;
+    // type message (use data-text if present)
+    const txt = messageEl.dataset.text || messageEl.textContent || "Hello!";
+    typeText(txt, messageEl);
+    // spawn hearts
+    startHearts();
+  }
+
+  function closeEnvelope(){
+    envelope.classList.remove('open');
+    opened = false;
+    clearHearts();
+  }
+
+  openBtn.addEventListener('click', ()=> {
+    if (opened) { closeEnvelope(); setTimeout(openEnvelope, 300); } else openEnvelope();
+  });
+
+  // envelope click toggles open/close
+  envelope.addEventListener('click', (e) => {
+    // prevent toggle when clicking on the letter area itself to avoid accidental replay
+    if (!opened) openEnvelope();
+  });
+
+  replayBtn.addEventListener('click', ()=>{
+    // replay typing
+    const txt = messageEl.dataset.text || messageEl.textContent || "Hello!";
+    messageEl.textContent = "";
+    if (!opened){ openEnvelope(); setTimeout(()=> typeText(txt, messageEl), 500); }
+    else{
+      messageEl.textContent = "";
+      typeText(txt, messageEl);
+    }
+  });
+
+  // music
+  musicBtn.addEventListener('click', ()=>{
+    if (!bg) return;
+    if (bg.paused){
+      bg.play().catch(()=>{ /* autoplay might block, ignore */ });
+      musicBtn.textContent = 'Pause Music';
+    } else {
+      bg.pause();
+      musicBtn.textContent = 'Play Music';
+    }
+  });
+
+  // hearts generator
+  function rand(min,max){ return Math.random()*(max-min)+min; }
+  let heartInterval = null;
+
+  function spawnHeart(){
+    const h = document.createElement('div');
+    h.className = 'heart';
+    const size = rand(12,26);
+    h.style.width = size + 'px';
+    h.style.height = size + 'px';
+    h.style.left = rand(10,90) + '%';
+    h.style.bottom = rand(6,18) + '%';
+    const dur = rand(2.6,5.2);
+    h.style.animationDuration = dur + 's';
+    hearts.appendChild(h);
+    // cleanup
+    setTimeout(()=> {
+      if (h && h.parentNode) h.parentNode.removeChild(h);
+    }, dur*1000 + 200);
+  }
+
+  function startHearts(){
+    if (heartInterval) clearInterval(heartInterval);
+    // spawn a few immediately
+    for (let i=0;i<6;i++) setTimeout(spawnHeart, i*140);
+    heartInterval = setInterval(spawnHeart, 500 + Math.random()*300);
+  }
+  function clearHearts(){
+    if (heartInterval) clearInterval(heartInterval);
+    heartInterval = null;
+    hearts.innerHTML = '';
+  }
+
+  // quick customization: set your photo by placing image URL in query param ?photo=...
+  (function loadFromQuery(){
+    const p = new URLSearchParams(location.search).get('photo');
+    if (p){
+      const img = document.getElementById('photo');
+      img.src = p;
+      img.style.display = 'block';
+    }
+    // preset message override: ?msg=Hello%20there
+    const m = new URLSearchParams(location.search).get('msg');
+    if (m){
+      messageEl.dataset.text = decodeURIComponent(m);
+    }
+  })();
+
+  // accessibility: keyboard open
+  document.addEventListener('keydown', (e)=>{
+    if (e.key === 'Enter' || e.key === ' ') openEnvelope();
+  });
+
+  // initial small effect
+  setTimeout(()=> {
+    envelope.style.transform = "translateY(-6px)";
+    setTimeout(()=> envelope.style.transform = "", 800);
+  }, 600);
+
+</script>
 </body>
 </html>
